@@ -11,66 +11,66 @@ import numpy as np
 import h5py
 import random
 
-def getPoints(osobaX, osobaY, osobaKut):
+def get_points(personx, persony, person_angle):
     points=np.empty([4,2])
     
-    points[0,0]=osobaX+4000
-    points[0,1]=osobaY+2500
+    points[0,0]=personx+4000
+    points[0,1]=persony+2500
     
-    points[1,0]=osobaX-1000
-    points[1,1]=osobaY+2500
+    points[1,0]=personx-1000
+    points[1,1]=persony+2500
     
-    points[2,0]=osobaX-1000
-    points[2,1]=osobaY-2500
+    points[2,0]=personx-1000
+    points[2,1]=persony-2500
     
-    points[3,0]=osobaX+4000
-    points[3,1]=osobaY-2500
+    points[3,0]=personx+4000
+    points[3,1]=persony-2500
     
     for i in range(0, 4):
-        tempX=points[i,0]-osobaX
-        tempY=points[i,1]-osobaY
-        rotatedX=tempX*np.cos(osobaKut)-tempY*np.sin(osobaKut)
-        rotatedY=tempX*np.sin(osobaKut)+tempY*np.cos(osobaKut)
-        points[i,0]=rotatedX+osobaX
-        points[i,1]=rotatedY+osobaY
+        tempx=points[i,0]-personx
+        tempy=points[i,1]-persony
+        rotatedx=tempx*np.cos(person_angle)-tempy*np.sin(person_angle)
+        rotatedy=tempx*np.sin(person_angle)+tempy*np.cos(person_angle)
+        points[i,0]=rotatedx+personx
+        points[i,1]=rotatedy+persony
     
     return points
 
     
-def getRelativePoints(osobaKut):
-    relativePoints=np.empty([4,2])
+def get_relative_points(person_angle):
+    relative_points=np.empty([4,2])
     
-    relativePoints[0,0]=4000
-    relativePoints[0,1]=2500
+    relative_points[0,0]=4000
+    relative_points[0,1]=2500
     
-    relativePoints[1,0]=-1000
-    relativePoints[1,1]=2500
+    relative_points[1,0]=-1000
+    relative_points[1,1]=2500
     
-    relativePoints[2,0]=-1000
-    relativePoints[2,1]=-2500
+    relative_points[2,0]=-1000
+    relative_points[2,1]=-2500
     
-    relativePoints[3,0]=4000
-    relativePoints[3,1]=-2500
+    relative_points[3,0]=4000
+    relative_points[3,1]=-2500
     
     for i in range(0, 4):
-        tempX=relativePoints[i,0]
-        tempY=relativePoints[i,1]
-        rotatedX=tempX*np.cos(osobaKut)-tempY*np.sin(osobaKut)
-        rotatedY=tempX*np.sin(osobaKut)+tempY*np.cos(osobaKut)
-        relativePoints[i,0]=rotatedX
-        relativePoints[i,1]=rotatedY
+        tempx=relative_points[i,0]
+        tempy=relative_points[i,1]
+        rotatedx=tempx*np.cos(person_angle)-tempy*np.sin(person_angle)
+        rotatedy=tempx*np.sin(person_angle)+tempy*np.cos(person_angle)
+        relative_points[i,0]=rotatedx
+        relative_points[i,1]=rotatedy
         
-    return relativePoints
+    return relative_points
 
     
-def rotateAroundOrigin(originX, originY, pointX, pointY, angle):
-    rotatedX=originX+np.cos(angle)*(pointX-originX)-np.sin(angle)*(pointY-originY)
-    rotatedY=originY+np.sin(angle)*(pointX-originX)+np.cos(angle)*(pointY-originY)
+def rotate_around_origin(originx, originy, pointx, pointy, angle):
+    rotatedx=originx+np.cos(angle)*(pointx-originx)-np.sin(angle)*(pointy-originy)
+    rotatedy=originy+np.sin(angle)*(pointx-originx)+np.cos(angle)*(pointy-originy)
     
-    return rotatedX, rotatedY
+    return rotatedx, rotatedy
 
         
-def isInside(x, y, poly):
+def is_inside(x, y, poly):
     n=len(poly)
     inside=False
 
@@ -93,195 +93,195 @@ def isInside(x, y, poly):
 database=pd.read_csv('person_DIAMOR-1_all.csv', delimiter=',').values
 print database[0,:]
 
-brojOsoba=input('Nad koliko osoba zelite vrsiti test? ')
-idOsoba=np.zeros(brojOsoba)
-for i in range(0, brojOsoba):
-    #idOsoba[i]=input('Unesite id zeljene osobe: ')
-    idOsoba[i]=database[random.randint(0, 5550723),1]
-print idOsoba
+persons_count=input('Nad koliko osoba zelite vrsiti test? ')
+persons_ids=np.zeros(persons_count)
+for i in range(0, persons_count):
+    #persons_ids[i]=input('Unesite id zeljene osobe: ')
+    persons_ids[i]=database[random.randint(0, database.shape[0]),1]
+print persons_ids
 
 
-brojZapisa=0
+numberof_records=0
 for i in range(0, database.shape[0]):
-    if database[i,1] in idOsoba and database[i,5]>400 and database[i,2]>=30000:
-        brojZapisa=brojZapisa+1
+    if database[i,1] in persons_ids and database[i,5]>400 and database[i,2]>=30000:
+        numberof_records=numberof_records+1
 
 
-brojIter=0
-lijevo=False
-ins=np.zeros((brojZapisa, 2, 50, 50))
-outs1s=np.zeros((brojZapisa, 2))
-outs2s=np.zeros((brojZapisa, 2))
-outs3s=np.zeros((brojZapisa, 2))
-outs4s=np.zeros((brojZapisa, 2))
-outs5s=np.zeros((brojZapisa, 2))
-centarRed, centarStupac=39, 25
+numberof_iterations=0
+is_left=False
+ins=np.zeros((numberof_records, 2, 50, 50))
+outs1s=np.zeros((numberof_records, 2))
+outs2s=np.zeros((numberof_records, 2))
+outs3s=np.zeros((numberof_records, 2))
+outs4s=np.zeros((numberof_records, 2))
+outs5s=np.zeros((numberof_records, 2))
+central_row, central_column=39, 25
 
 for i in range(0, database.shape[0]):
-    if database[i,1] in idOsoba and database[i,5]>400 and database[i,2]>=30000:
-        trenutnaOsoba=database[i,1]
-        pocetnoVrijeme=database[i,0]
-        vrijeme=datetime.datetime.utcfromtimestamp(database[i,0]).strftime('%Y-%m-%d %H:%M:%S')
-        print "U trenutku ", vrijeme, " pozicija je ", database[i,2], "x, ", database[i,3], "y"
-        osobaX, osobaY, osobaKut=database[i,2], database[i,3], database[i,6]
-        if osobaKut<0:
-            osobaKut=2*np.pi-abs(osobaKut)
+    if database[i,1] in persons_ids and database[i,5]>400 and database[i,2]>=30000:
+        current_person=database[i,1]
+        start_time=database[i,0]
+        time=datetime.datetime.utcfromtimestamp(database[i,0]).strftime('%Y-%m-%d %H:%M:%S')
+        print "U trenutku ", time, " pozicija je ", database[i,2], "x, ", database[i,3], "y"
+        personx, persony, person_angle=database[i,2], database[i,3], database[i,6]
+        if person_angle<0:
+            person_angle=2*np.pi-abs(person_angle)
             
-        if osobaKut>np.pi/2 and osobaKut<=(3*np.pi)/2:
-            polygon=getPoints(osobaX, osobaY, np.pi)
-            lijevo=True
+        if person_angle>np.pi/2 and person_angle<=(3*np.pi)/2:
+            polygon=get_points(personx, persony, np.pi)
+            is_left=True
         else:
-            polygon=getPoints(osobaX, osobaY, 0)
-        #polygonCentered=getRelativePoints(np.pi/2)
+            polygon=get_points(personx, persony, 0)
+        #polygon_centered=get_relative_points(np.pi/2)
         
         
         if i+5000>database.shape[0]:
             for j in range(i-5000, database.shape[0]):
-                if isInside(database[j,2], database[j,3], polygon) and database[i,0]==database[j,0] and database[i,1]!=database[j,1]:
-                    gostX=database[j,2]-osobaX
-                    gostY=database[j,3]-osobaY
-                    if lijevo:
-                        gostX=gostX*-1
-                        gostY=gostY*-1
-                    print "U blizini je id ", database[j,1], " rel. polozaj ", gostX, "x, ", gostY*-1, "y, brzine ", database [j,5], "mm/s, smjer kretanja ", database[j,6], " rad"
+                if is_inside(database[j,2], database[j,3], polygon) and database[i,0]==database[j,0] and database[i,1]!=database[j,1]:
+                    guestx=database[j,2]-personx
+                    guesty=database[j,3]-persony
+                    if is_left:
+                        guestx=guestx*-1
+                        guesty=guesty*-1
+                    print "U blizini je id ", database[j,1], " rel. polozaj ", guestx, "x, ", guesty*-1, "y, brzine ", database [j,5], "mm/s, smjer kretanja ", database[j,6], " rad"
                     try:
-                        ins[brojIter,0,int(centarRed-round(gostX/100)),int(centarStupac-round(gostY/100))]=database[j,5]/1000
-                        ins[brojIter,1,int(centarRed-round(gostX/100)),int(centarStupac-round(gostY/100))]=database[j,6]
+                        ins[numberof_iterations,0,int(central_row-round(guestx/100)),int(central_column-round(guesty/100))]=database[j,5]/1000
+                        ins[numberof_iterations,1,int(central_row-round(guestx/100)),int(central_column-round(guesty/100))]=database[j,6]
                     except:
                         print "Index ne moze biti 50!"
         else:
             for j in range(i-5000, i+5000):
-                if isInside(database[j,2], database[j,3], polygon) and database[i,0]==database[j,0] and database[i,1]!=database[j,1]:
-                    gostX=database[j,2]-osobaX
-                    gostY=database[j,3]-osobaY
-                    if lijevo:
-                        gostX=gostX*-1
-                        gostY=gostY*-1
-                    print "U blizini je id ", database[j,1], " rel. polozaj ", gostX, "x, ", gostY, "y, brzine ", database [j,5], "mm/s, smjer kretanja ", database[j,6], " rad"
+                if is_inside(database[j,2], database[j,3], polygon) and database[i,0]==database[j,0] and database[i,1]!=database[j,1]:
+                    guestx=database[j,2]-personx
+                    guesty=database[j,3]-persony
+                    if is_left:
+                        guestx=guestx*-1
+                        guesty=guesty*-1
+                    print "U blizini je id ", database[j,1], " rel. polozaj ", guestx, "x, ", guesty, "y, brzine ", database [j,5], "mm/s, smjer kretanja ", database[j,6], " rad"
                     try:
-                        ins[brojIter,0,int(centarRed-round(gostX/100)),int(centarStupac-round(gostY/100))]=database[j,5]/1000
-                        ins[brojIter,1,int(centarRed-round(gostX/100)),int(centarStupac-round(gostY/100))]=database[j,6]
+                        ins[numberof_iterations,0,int(central_row-round(guestx/100)),int(central_column-round(guesty/100))]=database[j,5]/1000
+                        ins[numberof_iterations,1,int(central_row-round(guestx/100)),int(central_column-round(guesty/100))]=database[j,6]
                     except:
                         print "Index ne moze biti 50!"
                 
-        ins[brojIter,0,centarRed,centarStupac]=database[i,5]/1000
-        ins[brojIter,1,centarRed,centarStupac]=database[i,6]
+        ins[numberof_iterations,0,central_row,central_column]=database[i,5]/1000
+        ins[numberof_iterations,1,central_row,central_column]=database[i,6]
         
-        zbrojBrzina, brojIterj=0, 0
+        speed_cumulative, numberof_iterationsj=0, 0
         if i+10000>database.shape[0]:
             for j in range(i, database.shape[0]):
-                if database[j,1]==trenutnaOsoba:
-                    zbrojBrzina=zbrojBrzina+database[j,5]
-                    brojIterj=brojIterj+1
-                    if pocetnoVrijeme+1>=database[j,0]:
-                        if lijevo:
-                            outs1s[brojIter,0]=((database[j,2]-osobaX)*-1)/1000
-                            outs1s[brojIter,1]=((database[j,3]-osobaY)*-1)/1000
+                if database[j,1]==current_person:
+                    speed_cumulative=speed_cumulative+database[j,5]
+                    numberof_iterationsj=numberof_iterationsj+1
+                    if start_time+1>=database[j,0]:
+                        if is_left:
+                            outs1s[numberof_iterations,0]=((database[j,2]-personx)*-1)/1000
+                            outs1s[numberof_iterations,1]=((database[j,3]-persony)*-1)/1000
                         else:
-                            outs1s[brojIter,0]=(database[j,2]-osobaX)/1000
-                            outs1s[brojIter,1]=(database[j,3]-osobaY)/1000
-                    elif pocetnoVrijeme+2>=database[j,0]:
-                        if lijevo:
-                            outs2s[brojIter,0]=((database[j,2]-osobaX)*-1)/1000
-                            outs2s[brojIter,1]=((database[j,3]-osobaY)*-1)/1000
+                            outs1s[numberof_iterations,0]=(database[j,2]-personx)/1000
+                            outs1s[numberof_iterations,1]=(database[j,3]-persony)/1000
+                    elif start_time+2>=database[j,0]:
+                        if is_left:
+                            outs2s[numberof_iterations,0]=((database[j,2]-personx)*-1)/1000
+                            outs2s[numberof_iterations,1]=((database[j,3]-persony)*-1)/1000
                         else:
-                            outs2s[brojIter,0]=(database[j,2]-osobaX)/1000
-                            outs2s[brojIter,1]=(database[j,3]-osobaY)/1000
-                        #print "Srednja brzina nakon 2 sekunde je: ", zbrojBrzina/brojIterj, " mm/s"
-                    elif pocetnoVrijeme+3>=database[j,0]:
-                        if lijevo:
-                            outs3s[brojIter,0]=((database[j,2]-osobaX)*-1)/1000
-                            outs3s[brojIter,1]=((database[j,3]-osobaY)*-1)/1000
+                            outs2s[numberof_iterations,0]=(database[j,2]-personx)/1000
+                            outs2s[numberof_iterations,1]=(database[j,3]-persony)/1000
+                        #print "Srednja brzina nakon 2 sekunde je: ", speed_cumulative/numberof_iterationsj, " mm/s"
+                    elif start_time+3>=database[j,0]:
+                        if is_left:
+                            outs3s[numberof_iterations,0]=((database[j,2]-personx)*-1)/1000
+                            outs3s[numberof_iterations,1]=((database[j,3]-persony)*-1)/1000
                         else:
-                            outs3s[brojIter,0]=(database[j,2]-osobaX)/1000
-                            outs3s[brojIter,1]=(database[j,3]-osobaY)/1000
-                    elif pocetnoVrijeme+4>=database[j,0]:
-                        if lijevo:
-                            outs4s[brojIter,0]=((database[j,2]-osobaX)*-1)/1000
-                            outs4s[brojIter,1]=((database[j,3]-osobaY)*-1)/1000
+                            outs3s[numberof_iterations,0]=(database[j,2]-personx)/1000
+                            outs3s[numberof_iterations,1]=(database[j,3]-persony)/1000
+                    elif start_time+4>=database[j,0]:
+                        if is_left:
+                            outs4s[numberof_iterations,0]=((database[j,2]-personx)*-1)/1000
+                            outs4s[numberof_iterations,1]=((database[j,3]-persony)*-1)/1000
                         else:
-                            outs4s[brojIter,0]=(database[j,2]-osobaX)/1000
-                            outs4s[brojIter,1]=(database[j,3]-osobaY)/1000
-                    elif pocetnoVrijeme+5>=database[j,0]:
-                        if lijevo:
-                            outs5s[brojIter,0]=((database[j,2]-osobaX)*-1)/1000
-                            outs5s[brojIter,1]=((database[j,3]-osobaY)*-1)/1000
+                            outs4s[numberof_iterations,0]=(database[j,2]-personx)/1000
+                            outs4s[numberof_iterations,1]=(database[j,3]-persony)/1000
+                    elif start_time+5>=database[j,0]:
+                        if is_left:
+                            outs5s[numberof_iterations,0]=((database[j,2]-personx)*-1)/1000
+                            outs5s[numberof_iterations,1]=((database[j,3]-persony)*-1)/1000
                         else:
-                            outs5s[brojIter,0]=(database[j,2]-osobaX)/1000
-                            outs5s[brojIter,1]=(database[j,3]-osobaY)/1000
-                        #print "Srednja brzina nakon 5 sekundi je: ", zbrojBrzina/brojIterj, " mm/s"
+                            outs5s[numberof_iterations,0]=(database[j,2]-personx)/1000
+                            outs5s[numberof_iterations,1]=(database[j,3]-persony)/1000
+                        #print "Srednja brzina nakon 5 sekundi je: ", speed_cumulative/numberof_iterationsj, " mm/s"
         else:
             for j in range(i, i+10000):
-                if database[j,1]==trenutnaOsoba:
-                    zbrojBrzina=zbrojBrzina+database[j,5]
-                    brojIterj=brojIterj+1
-                    if pocetnoVrijeme+1>=database[j,0]:
-                        if lijevo:
-                            outs1s[brojIter,0]=((database[j,2]-osobaX)*-1)/1000
-                            outs1s[brojIter,1]=((database[j,3]-osobaY)*-1)/1000
+                if database[j,1]==current_person:
+                    speed_cumulative=speed_cumulative+database[j,5]
+                    numberof_iterationsj=numberof_iterationsj+1
+                    if start_time+1>=database[j,0]:
+                        if is_left:
+                            outs1s[numberof_iterations,0]=((database[j,2]-personx)*-1)/1000
+                            outs1s[numberof_iterations,1]=((database[j,3]-persony)*-1)/1000
                         else:
-                            outs1s[brojIter,0]=(database[j,2]-osobaX)/1000
-                            outs1s[brojIter,1]=(database[j,3]-osobaY)/1000
-                    elif pocetnoVrijeme+2>=database[j,0]:
-                        if lijevo:
-                            outs2s[brojIter,0]=((database[j,2]-osobaX)*-1)/1000
-                            outs2s[brojIter,1]=((database[j,3]-osobaY)*-1)/1000
+                            outs1s[numberof_iterations,0]=(database[j,2]-personx)/1000
+                            outs1s[numberof_iterations,1]=(database[j,3]-persony)/1000
+                    elif start_time+2>=database[j,0]:
+                        if is_left:
+                            outs2s[numberof_iterations,0]=((database[j,2]-personx)*-1)/1000
+                            outs2s[numberof_iterations,1]=((database[j,3]-persony)*-1)/1000
                         else:
-                            outs2s[brojIter,0]=(database[j,2]-osobaX)/1000
-                            outs2s[brojIter,1]=(database[j,3]-osobaY)/1000
-                        #print "Srednja brzina nakon 2 sekunde je: ", zbrojBrzina/brojIterj, " mm/s"
-                    elif pocetnoVrijeme+3>=database[j,0]:
-                        if lijevo:
-                            outs3s[brojIter,0]=((database[j,2]-osobaX)*-1)/1000
-                            outs3s[brojIter,1]=((database[j,3]-osobaY)*-1)/1000
+                            outs2s[numberof_iterations,0]=(database[j,2]-personx)/1000
+                            outs2s[numberof_iterations,1]=(database[j,3]-persony)/1000
+                        #print "Srednja brzina nakon 2 sekunde je: ", speed_cumulative/numberof_iterationsj, " mm/s"
+                    elif start_time+3>=database[j,0]:
+                        if is_left:
+                            outs3s[numberof_iterations,0]=((database[j,2]-personx)*-1)/1000
+                            outs3s[numberof_iterations,1]=((database[j,3]-persony)*-1)/1000
                         else:
-                            outs3s[brojIter,0]=(database[j,2]-osobaX)/1000
-                            outs3s[brojIter,1]=(database[j,3]-osobaY)/1000
-                    elif pocetnoVrijeme+4>=database[j,0]:
-                        if lijevo:
-                            outs4s[brojIter,0]=((database[j,2]-osobaX)*-1)/1000
-                            outs4s[brojIter,1]=((database[j,3]-osobaY)*-1)/1000
+                            outs3s[numberof_iterations,0]=(database[j,2]-personx)/1000
+                            outs3s[numberof_iterations,1]=(database[j,3]-persony)/1000
+                    elif start_time+4>=database[j,0]:
+                        if is_left:
+                            outs4s[numberof_iterations,0]=((database[j,2]-personx)*-1)/1000
+                            outs4s[numberof_iterations,1]=((database[j,3]-persony)*-1)/1000
                         else:
-                            outs4s[brojIter,0]=(database[j,2]-osobaX)/1000
-                            outs4s[brojIter,1]=(database[j,3]-osobaY)/1000
-                    elif pocetnoVrijeme+5>=database[j,0]:
-                        if lijevo:
-                            outs5s[brojIter,0]=((database[j,2]-osobaX)*-1)/1000
-                            outs5s[brojIter,1]=((database[j,3]-osobaY)*-1)/1000
+                            outs4s[numberof_iterations,0]=(database[j,2]-personx)/1000
+                            outs4s[numberof_iterations,1]=(database[j,3]-persony)/1000
+                    elif start_time+5>=database[j,0]:
+                        if is_left:
+                            outs5s[numberof_iterations,0]=((database[j,2]-personx)*-1)/1000
+                            outs5s[numberof_iterations,1]=((database[j,3]-persony)*-1)/1000
                         else:
-                            outs5s[brojIter,0]=(database[j,2]-osobaX)/1000
-                            outs5s[brojIter,1]=(database[j,3]-osobaY)/1000
-                        #print "Srednja brzina nakon 5 sekundi je: ", zbrojBrzina/brojIterj, " mm/s"
+                            outs5s[numberof_iterations,0]=(database[j,2]-personx)/1000
+                            outs5s[numberof_iterations,1]=(database[j,3]-persony)/1000
+                        #print "Srednja brzina nakon 5 sekundi je: ", speed_cumulative/numberof_iterationsj, " mm/s"
         
-        outs1s[brojIter,0], outs1s[brojIter,1]=rotateAroundOrigin(0, 0, outs1s[brojIter,0], outs1s[brojIter,1], np.pi/2)
-        outs2s[brojIter,0], outs2s[brojIter,1]=rotateAroundOrigin(0, 0, outs2s[brojIter,0], outs2s[brojIter,1], np.pi/2)
-        outs3s[brojIter,0], outs3s[brojIter,1]=rotateAroundOrigin(0, 0, outs3s[brojIter,0], outs3s[brojIter,1], np.pi/2)
-        outs4s[brojIter,0], outs4s[brojIter,1]=rotateAroundOrigin(0, 0, outs4s[brojIter,0], outs4s[brojIter,1], np.pi/2)
-        outs5s[brojIter,0], outs5s[brojIter,1]=rotateAroundOrigin(0, 0, outs5s[brojIter,0], outs5s[brojIter,1], np.pi/2)
-        #print "Nakon 1 s rel polozaj: ", outs1s[brojIter,0],"x, ", outs1s[brojIter,1], "y"
-        #print "Nakon 2 s rel polozaj: ", outs2s[brojIter,0],"x, ", outs2s[brojIter,1], "y"
-        #print "Nakon 3 s rel polozaj: ", outs3s[brojIter,0],"x, ", outs3s[brojIter,1], "y"
-        #print "Nakon 4 s rel polozaj: ", outs4s[brojIter,0],"x, ", outs4s[brojIter,1], "y"
-        #print "Nakon 5 s rel polozaj: ", outs5s[brojIter,0],"x, ", outs5s[brojIter,1], "y"
+        outs1s[numberof_iterations,0], outs1s[numberof_iterations,1]=rotate_around_origin(0, 0, outs1s[numberof_iterations,0], outs1s[numberof_iterations,1], np.pi/2)
+        outs2s[numberof_iterations,0], outs2s[numberof_iterations,1]=rotate_around_origin(0, 0, outs2s[numberof_iterations,0], outs2s[numberof_iterations,1], np.pi/2)
+        outs3s[numberof_iterations,0], outs3s[numberof_iterations,1]=rotate_around_origin(0, 0, outs3s[numberof_iterations,0], outs3s[numberof_iterations,1], np.pi/2)
+        outs4s[numberof_iterations,0], outs4s[numberof_iterations,1]=rotate_around_origin(0, 0, outs4s[numberof_iterations,0], outs4s[numberof_iterations,1], np.pi/2)
+        outs5s[numberof_iterations,0], outs5s[numberof_iterations,1]=rotate_around_origin(0, 0, outs5s[numberof_iterations,0], outs5s[numberof_iterations,1], np.pi/2)
+        #print "Nakon 1 s rel polozaj: ", outs1s[numberof_iterations,0],"x, ", outs1s[numberof_iterations,1], "y"
+        #print "Nakon 2 s rel polozaj: ", outs2s[numberof_iterations,0],"x, ", outs2s[numberof_iterations,1], "y"
+        #print "Nakon 3 s rel polozaj: ", outs3s[numberof_iterations,0],"x, ", outs3s[numberof_iterations,1], "y"
+        #print "Nakon 4 s rel polozaj: ", outs4s[numberof_iterations,0],"x, ", outs4s[numberof_iterations,1], "y"
+        #print "Nakon 5 s rel polozaj: ", outs5s[numberof_iterations,0],"x, ", outs5s[numberof_iterations,1], "y"
         
-        brojIter=brojIter+1
-        lijevo=False
+        numberof_iterations=numberof_iterations+1
+        is_left=False
 
 
 
-zaBrisati=np.argwhere(np.sqrt(np.square(outs5s[:,0])+np.square(outs5s[:,1]))<1)
-outs5s=np.delete(outs5s, zaBrisati, 0)
-ins=np.delete(ins, zaBrisati, 0)
+for_deletion=np.argwhere(np.sqrt(np.square(outs5s[:,0])+np.square(outs5s[:,1]))<1)
+outs5s=np.delete(outs5s, for_deletion, 0)
+ins=np.delete(ins, for_deletion, 0)
 
-zaBrisati=np.argwhere(outs5s[:,1]<0)
-outs5s=np.delete(outs5s, zaBrisati, 0)
-ins=np.delete(ins, zaBrisati, 0)
+for_deletion=np.argwhere(outs5s[:,1]<0)
+outs5s=np.delete(outs5s, for_deletion, 0)
+ins=np.delete(ins, for_deletion, 0)
 
 index=np.argwhere(np.abs(np.arctan2(outs5s[:,0], outs5s[:,1]))<0.1)
 index2=np.argwhere(np.abs(np.arctan2(outs5s[:,0], outs5s[:,1]))>0.1)
-zaBrisati=index[0:int(index.shape[0]-round(index2.shape[0]/0.7-index2.shape[0])),:]
-outs5s=np.delete(outs5s, zaBrisati, 0)
-ins=np.delete(ins, zaBrisati, 0)
+for_deletion=index[0:int(index.shape[0]-round(index2.shape[0]/0.7-index2.shape[0])),:]
+outs5s=np.delete(outs5s, for_deletion, 0)
+ins=np.delete(ins, for_deletion, 0)
 
 h5fw=h5py.File('insouts.h5', 'w')
 h5fw.create_dataset("ins", data=ins, compression='lzf')
