@@ -7,8 +7,8 @@ Created on Tue May  9 17:28:46 2017
 
 import h5py
 import numpy as np
-from keras.models import Sequential, model_from_json
-from keras.layers import Dense, Conv2D, Activation, MaxPooling2D, Flatten, Convolution2D, Dropout
+from keras.models import Sequential
+from keras.layers import Dense, Conv2D, Activation, MaxPooling2D, Flatten
 
 insouts=h5py.File("insouts.h5", 'r')
 ins=insouts['ins']
@@ -52,14 +52,6 @@ model_json = model.to_json()
 with open('pedestrian_model.json', "w") as json_file:
     json_file.write(model_json)
 json_file.close()
-"""
-json_string=model.to_json()
-open('my_model_architecture.json', 'w').write(json_string)
-model.sample_weights('my_model_weights.h5', overwrite=True)
-
-model=model_from_json(open('my_model_architecture.json').read())
-model.load_weights('my_model_weights.h5')
-"""
 
 result=model.predict(testX)
 print result
