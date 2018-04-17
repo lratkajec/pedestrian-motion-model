@@ -36,10 +36,10 @@ for i in range(1, persons_count):
 numberof_records=records.shape[0]
 print "Records loaded."
 
-ins=np.zeros((numberof_records, 2, 50, 50))
+ins=np.zeros((numberof_records, 2, 20, 20))
 outs=np.zeros((numberof_records, 2))
 for_deletion=[]
-central_row, central_column=39, 25
+central_row, central_column=16, 10
 seconds_after=5
 
 for i in range(0, numberof_records):
@@ -68,10 +68,10 @@ for i in range(0, numberof_records):
         else:
             guestx=guestx*-1
         try:
-            ins[i,0,int(central_row-(guestx/100)),int(central_column+(guesty/100))]=guests[j,5]/1000
-            ins[i,1,int(central_row-(guestx/100)),int(central_column+(guesty/100))]=guest_angle
+            ins[i,0,int(central_row-(guestx/250)),int(central_column+(guesty/250))]=guests[j,5]/1000
+            ins[i,1,int(central_row-(guestx/250)),int(central_column+(guesty/250))]=guest_angle
         except:
-            print "Index can't be larger than 50!"
+            print "Index can't be larger than 20!"
     ins[i,0,central_row,central_column]=person_velocity/1000
     ins[i,1,central_row,central_column]=person_angle
     
@@ -85,12 +85,12 @@ for i in range(0, numberof_records):
         outs[i,1]=outs[i,1]*-1
     else:
         outs[i,0]=outs[i,0]*-1
-    outs[i,0]=outs[i,0]/100
-    outs[i,1]=outs[i,1]/100
+    outs[i,0]=outs[i,0]/1000
+    outs[i,1]=outs[i,1]/1000
     
 outs=np.delete(outs, for_deletion, 0)
 ins=np.delete(ins, for_deletion, 0)
-'''
+
 #delete everyone that moved less than 1m        
 for_deletion=np.argwhere(np.sqrt(np.square(outs[:,0])+np.square(outs[:,1]))<1)
 outs=np.delete(outs, for_deletion, 0)
@@ -101,12 +101,13 @@ for_deletion=np.argwhere(outs[:,0]<0)
 outs=np.delete(outs, for_deletion, 0)
 ins=np.delete(ins, for_deletion, 0)
 
+#only in 30% of instances should the pedestrian move straight ahead without anyone impacting their movement
 index=np.argwhere(np.abs(np.arctan2(outs[:,0], outs[:,1]))<0.1)
 index2=np.argwhere(np.abs(np.arctan2(outs[:,0], outs[:,1]))>0.1)
 for_deletion=index[0:int(index.shape[0]-round(index2.shape[0]/0.7-index2.shape[0])),:]
 outs=np.delete(outs, for_deletion, 0)
 ins=np.delete(ins, for_deletion, 0)
-'''
+
 h5fw=h5py.File('insouts.h5', 'w')
 h5fw.create_dataset("ins", data=ins, compression='lzf')
 h5fw.create_dataset("outs", data=outs, compression='lzf')
