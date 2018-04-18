@@ -24,7 +24,7 @@ testY=outs[0:10]
 
 model=Sequential()
 
-model.add(Conv2D(32, (3, 3), padding='valid', input_shape=(2, 50, 50)))
+model.add(Conv2D(32, (3, 3), padding='valid', input_shape=(2, 20, 20)))
 model.add(Activation('relu'))
 
 model.add(Conv2D(32, (3, 3)))
@@ -43,7 +43,7 @@ model.add(Activation('linear'))
 
 model.compile(loss='mean_squared_error', optimizer='adadelta')
 
-model.fit(ins, outs, epochs=10, batch_size=32, shuffle='batch')
+model.fit(ins, outs, epochs=1, batch_size=32, shuffle='batch')
 #model.fit(ins, outs1, epochs=10, batch_size=32, shuffle='batch')
 #model.fit(ins, outs2, epochs=10, batch_size=32, shuffle='batch')
 
