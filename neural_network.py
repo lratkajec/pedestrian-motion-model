@@ -43,7 +43,7 @@ model.add(Activation('linear'))
 
 model.compile(loss='mean_squared_error', optimizer='adadelta')
 
-model.fit(ins, outs, epochs=1, batch_size=32, shuffle='batch')
+model.fit(ins, outs, epochs=10, batch_size=32, shuffle='batch')
 #model.fit(ins, outs1, epochs=10, batch_size=32, shuffle='batch')
 #model.fit(ins, outs2, epochs=10, batch_size=32, shuffle='batch')
 
