@@ -24,17 +24,17 @@ def progress_bar(count, total, status=''):
 def calculate_all():
 
     # ucitaj podatke (CSV)
-    #database=pd.read_csv('person_DIAMOR-1_all.csv', delimiter=',').values
+    #database=pd.read_csv('data/person_DIAMOR-1_all.csv', delimiter=',').values
     #database=database[(database[:,5]>400) & (database[:,2]>=30000),:]
     
     # snimi u h5
-    #h5fw=h5py.File('person_DIAMOR-1_all.h5', 'w')
+    #h5fw=h5py.File('data/person_DIAMOR-1_all.h5', 'w')
     #insds  = h5fw.create_dataset("data", data=database, compression='lzf')
     #h5fw.close()
     #return
     
     # ucitaj iz h5 - puno brze od CSV
-    h5fw=h5py.File('person_DIAMOR-1_all_recalculated.h5', 'r')
+    h5fw=h5py.File('data/person_DIAMOR-1_all_recalculated.h5', 'r')
     database = h5fw['data'][:]
     h5fw.close()
     
@@ -63,7 +63,7 @@ def calculate_all():
     outs=np.zeros((arrsize, 2))
     
     # h5 output file and datasets
-    h5fw=h5py.File('insouts.h5', 'w')
+    h5fw=h5py.File('data/neural_network_insouts.h5', 'w')
     insds  = h5fw.create_dataset("ins",  (0, 2, 20, 20), maxshape=(None, 2, 20, 20), compression='lzf')
     outsds = h5fw.create_dataset("outs", (0, 2), maxshape=(None, 2), compression='lzf')
     

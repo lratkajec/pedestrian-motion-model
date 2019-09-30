@@ -22,7 +22,7 @@ def progress_bar(count, total, status=''):
 
 #@profile
 def recalculate():    
-    database=pd.read_csv('person_DIAMOR-1_all.csv', delimiter=',').values
+    database=pd.read_csv('data/person_DIAMOR-1_all.csv', delimiter=',').values
     database=database[(database[:,5]>400) & (database[:,2]>=30000),:]
     dbsize = database.shape[0]
     print "Database loaded (size = %d)." % (dbsize)
@@ -49,7 +49,7 @@ def recalculate():
             person_angle_calc = np.arctan2(dy_before, dx_before);
             to_write[i,5], to_write[i,6]=person_velocity_calc, person_angle_calc
             
-    h5fw=h5py.File('person_DIAMOR-1_all_recalculated.h5', 'w')
+    h5fw=h5py.File('data/person_DIAMOR-1_all_recalculated.h5', 'w')
     h5fw.create_dataset("data", data=to_write, compression='lzf')
     h5fw.close()
     

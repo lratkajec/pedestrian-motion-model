@@ -10,7 +10,7 @@ import numpy as np
 from keras.models import Sequential
 from keras.layers import Dense, Conv2D, Activation, MaxPooling2D, Flatten
 
-insouts=h5py.File("insouts.h5", 'r')
+insouts=h5py.File("data/neural_network_insouts.h5", 'r')
 ins=insouts['ins']
 outs=insouts['outs']
 outs1=outs[:,0]/outs[:,1]
@@ -47,9 +47,9 @@ model.fit(ins, outs, epochs=10, batch_size=32, shuffle='batch')
 #model.fit(ins, outs1, epochs=10, batch_size=32, shuffle='batch')
 #model.fit(ins, outs2, epochs=10, batch_size=32, shuffle='batch')
 
-model.save_weights('pedestrian_model.h5')
+model.save_weights('model/pedestrian_model_weights.h5')
 model_json = model.to_json()
-with open('pedestrian_model.json', "w") as json_file:
+with open('model/pedestrian_model.json', "w") as json_file:
     json_file.write(model_json)
 json_file.close()
 
